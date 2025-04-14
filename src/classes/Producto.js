@@ -7,12 +7,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 class Producto{
-    constructor(nombre, descripcion, precio, stock, imagen, categoria){
+    constructor(id, nombre, descripcion, precio, stock, imagen, categoria){
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
-        this.imagen = imagen;
+        this.imagen = "http://localhost:3001/" + imagen;
         this.categoria = categoria;
     }
 
@@ -22,7 +23,7 @@ class Producto{
           <CardMedia
             component="img"
             alt={this.nombre}
-            height="140"
+            height="50"
             image={this.imagen}
           />
           <CardContent>
