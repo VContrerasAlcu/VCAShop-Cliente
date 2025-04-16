@@ -5,8 +5,8 @@ import Producto from "../classes/Producto.js";
 function Home(){
     const [productos, setProductos] = useState([]);
     useEffect(()=>{
-        fetch('localhost:3001/productos')
-        .then((response) => response.json)
+        fetch('http://localhost:3001/productos')
+        .then((response) => response.json())
         .then((data) => {
             const arrayProductos = data.map(
                 (item) => new Producto(item.id, item.nombre, item.descripcion,
@@ -15,14 +15,29 @@ function Home(){
                 );
         
             setProductos(arrayProductos);
+            
         }
         )
         }
     ,[]);
 
     return (
-        <div>
-            {productos.forEach((item) => item.mostrar())}
+        <div >
+            <ul style={{ 
+                    display: 'flex', 
+                    flexWrap: 'wrap', 
+                    justifyContent: 'space-between', 
+                    gap: '10px', 
+                    padding: 0, 
+                    listStyle: 'none' 
+                    }}>
+
+                {productos.map((producto) => (
+                    <li>{producto.mostrarDetalles()}</li>
+                )
+            )}
+                    
+            </ul>
         </div>
     )
 };
