@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Producto from "../classes/Producto.js";
+import ProductoMin from "./ProductoMin.js";
 
 function Home(){
     const [productos, setProductos] = useState([]);
@@ -14,7 +15,7 @@ function Home(){
             const arrayProductos = data.map(
                 (item) => new Producto(item.id, item.nombre, item.descripcion,
                                       item.precio, item.stock, item.imagen,
-                                      item.categoria,navigate)
+                                      item.categoria)
                 );
         
             setProductos(arrayProductos);
@@ -36,7 +37,7 @@ function Home(){
                     }}>
 
                 {productos.map((producto) => (
-                    <li>{producto.mostrarDetalles()}</li>
+                    <li><ProductoMin producto = {producto} /></li>
                 )
             )}
                     
