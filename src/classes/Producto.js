@@ -6,8 +6,9 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+
 class Producto{
-    constructor(id, nombre, descripcion, precio, stock, imagen, categoria){
+    constructor(id, nombre, descripcion, precio, stock, imagen, categoria, navigate){
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -15,9 +16,10 @@ class Producto{
         this.stock = stock;
         this.imagen = "http://localhost:3001" + imagen;
         this.categoria = categoria;
+        this.navigate = navigate;
     }
 
-   mostrarDetalles(){    
+    mostrarDetalles(){  
       return (
         <Card sx={{ maxWidth: 200, height: 400, display: 'flex', flexDirection: 'column' }}>
           <CardMedia
@@ -50,12 +52,26 @@ class Producto{
             </Typography>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-            <Button size="small">Share</Button>
-            <Button size="small">Learn More</Button>
+            <Button size="small">Comprar</Button>
+            <Button size="small" onClick={() => this.desplazarse('/detalles')}>Más información</Button>
           </CardActions>
         </Card>
         );
-   }
+    }
+
+    desplazarse(ruta){
+        const producto = {
+          id: this.id,
+          nombre: this.nombre,
+          descripcion: this.descripcion,
+          precio: this.precio,
+          stock: this.stock,
+          imagen: this.imagen,
+          categoria: this.categoria
+
+        }
+        this.navigate(ruta, {state: {producto: producto}});
+    }
 }
 
 export default Producto;
