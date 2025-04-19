@@ -27,7 +27,7 @@ function ProductoMax({producto}){
         </CardContent>
         <CardActions>
         <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-            <Button variant="contained" color="primary" onClick={navigate('/compra', {state: {producto: producto}})}>
+            <Button variant="contained" color="primary" onClick={() => navigate('/compra', {state: {producto: producto}})}>
                 Comprar
             </Button>
         </Box>

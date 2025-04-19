@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext.js";
 import { useNavigate } from "react-router-dom";
 
 function Validacion() {
@@ -9,7 +9,7 @@ function Validacion() {
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        const response = await fetch("http://localhost:5000/login", {
+        const response = await fetch("http://localhost:3001/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -32,7 +32,9 @@ function Validacion() {
             <input type="password" placeholder="Contraseña" onChange={(e) => setPassword(e.target.value)} />
             <button onClick={handleLogin}>Entrar</button>
         </div>
+
     );
-}
+};
 
 export default Validacion;
+
