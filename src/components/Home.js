@@ -1,9 +1,13 @@
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Producto from "../classes/Producto.js";
+import ProductoMin from "./ProductoMin.js";
 
 function Home(){
     const [productos, setProductos] = useState([]);
+    const navigate = useNavigate();
+
     useEffect(()=>{
         fetch('http://localhost:3001/productos')
         .then((response) => response.json())
@@ -33,7 +37,7 @@ function Home(){
                     }}>
 
                 {productos.map((producto) => (
-                    <li>{producto.mostrarDetalles()}</li>
+                    <li><ProductoMin producto = {producto} /></li>
                 )
             )}
                     
