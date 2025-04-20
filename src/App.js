@@ -8,20 +8,23 @@ import Compra from './components/Compra.js';
 import RutaProtegida from './components/RutaProtegida.js';
 import { AuthProvider } from './context/AuthContext.js';
 import Validacion from './components/Validacion.js';
+import { ProductoProvider } from './context/productoContext.js';
 
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-          <Barra />
-          <Routes>
-            <Route path="/" element={<Home />}/>
-            <Route path="/detalles" element={<Detalles />} />
-            <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
-            <Route path="/validacion" element={<Validacion />} />
-          </Routes>
-      </BrowserRouter>
+      <ProductoProvider>
+        <BrowserRouter>
+            <Barra />
+            <Routes>
+              <Route path="/" element={<Home />}/>
+              <Route path="/detalles" element={<Detalles />} />
+              <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
+              <Route path="/validacion" element={<Validacion />} />
+            </Routes>
+        </BrowserRouter>
+      </ProductoProvider>
     </AuthProvider>
   );
 }
