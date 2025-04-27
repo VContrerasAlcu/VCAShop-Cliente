@@ -4,11 +4,13 @@ import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
 import { AuthContext } from '../context/AuthContext.js';
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { Typography, Button } from '@mui/material';
 
-// preview-start
+
+
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
-// preview-end
+
 
 
 export default function Validacion() {
@@ -16,8 +18,6 @@ export default function Validacion() {
   const {setAuth} = useContext(AuthContext);
   const navigate = useNavigate();
   const signIn = async (provider, formData) => {
-    //const promise = new Promise((resolve) => {
-      //setTimeout(() => {
         fetch('http://localhost:3001/login',{
           method: "POST",
           headers: {"Content-Type": "application/json"},
@@ -30,29 +30,95 @@ export default function Validacion() {
             alert(JSON.stringify(data));
             const token = data.token || null;
             if (token){
-              localStorage.setItem("token",token);
+              sessionStorage.setItem("token",token);
               setAuth(token);
               navigate('/compra');
   
             }
             else {alert("Token no devuelto por el servidor")}
           });
-       // resolve();
-     // }, 300);
-  //  });
-  //  return promise;
   };
+  function Title() {
+    return <h2 style={{ marginBottom: 8 }}>Hola!!</h2>;
+  }
   
+  function Subtitle() {
+    return (
+      <Typography>
+        Identifícate para continuar.
+      </Typography>
+    );
+  }
+
+  function Remember(){
+    return (<></>)
+  }
+
+  function CustomButton() {
+    return (
+      <Button
+        type="submit"
+        variant= "contained"
+        color="info"
+        size="small"
+        disableElevation
+        fullWidth
+        sx={{ my: 2 }}
+      >
+        Entrar
+      </Button>
+    );
+  }
+
+  function SignUpLink() {
+    return (
+      <Link to="/registro" variant="body2">
+        Eres nuevo/a? Regístrate
+      </Link>
+    );
+  }
+
+  const BRANDING = {
+    logo: (
+      <img
+        src="/images/logo.png"
+        alt="MUI logo"
+        style={{ height: 200}}
+
+      />
+    )
+  };
+
   return (
-    // preview-start
-    <AppProvider theme={theme}>
+ 
+    <AppProvider  branding={BRANDING} theme={theme}>
       <SignInPage
         signIn={signIn}
         providers={providers}
-        slotProps={{ emailField: { autoFocus: false }, form: { noValidate: true } }}
+        slotProps={{
+          emailField: { autoFocus: false },
+          form: { noValidate: true },
+          rememberMe: null,
+          submitButton: {children: "Entrar"},
+          footer: { 
+            children: (
+              <span>¿Eres nuevo/a? <Link to="/alta" style={{ textDecoration: "none", color: "#1e88e5", fontWeight: "bold" }}>Regístrate</Link></span>
+            )
+          }
+      
+         }}
+         slots={{
+          title: Title,
+          subtitle: Subtitle,
+          rememberMe: Remember,
+          submitButton: CustomButton,
+          signUpLink: SignUpLink,
+          
+        }}
+        
       />
     </AppProvider>
-    // preview-end
+
   );
 }
 

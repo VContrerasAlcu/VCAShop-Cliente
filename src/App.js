@@ -9,6 +9,8 @@ import RutaProtegida from './components/RutaProtegida.js';
 import { AuthProvider } from './context/AuthContext.js';
 import Validacion from './components/Validacion.js';
 import { ProductoProvider } from './context/productoContext.js';
+import Registro from './components/Registro.js';
+import RegistroOk from './components/RegistroOk.js';
 
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
               <Route path="/detalles" element={<Detalles />} />
               <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
               <Route path="/validacion" element={<Validacion />} />
+              <Route path="/registro" element={<Registro />} />
+              <Route path="/registroOk" element={<RegistroOk />} />
             </Routes>
         </BrowserRouter>
       </ProductoProvider>
