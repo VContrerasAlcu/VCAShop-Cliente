@@ -6,9 +6,17 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { productoContext } from "../context/productoContext.js";
+import {useContext} from 'react';
 
 function ProductoMin({producto}){
     const navigate = useNavigate();
+    const {setProducto} = useContext(productoContext);
+    const handleInformacion = () => {
+      setProducto(producto);
+      navigate('/detalles');
+
+    }
     return (
       <Card sx={{ maxWidth: 200, height: 400, display: 'flex', flexDirection: 'column' }}>
         <CardMedia
@@ -42,7 +50,7 @@ function ProductoMin({producto}){
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
           <Button size="small">Comprar</Button>
-          <Button size="small" onClick={() => navigate('/detalles',{state: {producto: producto}})}>Más información</Button>
+          <Button size="small" onClick={handleInformacion}>Más información</Button>
         </CardActions>
       </Card>
       );
