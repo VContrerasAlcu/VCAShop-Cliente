@@ -55,6 +55,7 @@ const RegisterForm = () => {
   const [formDisabled, setFormDisabled] = useState(false);
   const [expired, setExpired] = useState(false); // Estado para el tiempo expirado
   const [verificado, setVerificado] = useState(false); // Nuevo estado para la verificación
+  const mensajeTemp = 'Pulse en el link que se le ha enviado al correo para completar el registro';
 
   const resetStates = () => {
     setFormDisabled(false); // Rehabilitar el formulario
@@ -116,16 +117,30 @@ const RegisterForm = () => {
         <div>
           {verificado ? (
             <div>
-              <Typography variant="body2" color="success" sx={{ mt: 2 }}>
+              <Typography 
+                variant="body2" 
+                color="success" 
+                sx={{ 
+                  mt: 2, 
+                  mb: 2 
+                }}
+              >
                 Cliente verificado. Vaya a la página de login.
               </Typography>
+
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ mt: 2 }}
-                onClick={() => navigate("/login")}
+                sx={{
+                  mt: 2,
+                  width: '100px', // Ajusta el tamaño del botón
+                  height: '30px', // Opcional: cambia la altura si lo deseas
+                  display: 'block', // Para centrarlo horizontalmente
+                  margin: '0 auto', // Centrar el botón en su contenedor
+                }}
+                onClick={() => navigate(-1)}
               >
-                Ir a Login
+                Login
               </Button>
             </div>
           ) : !expired ? (
@@ -137,12 +152,13 @@ const RegisterForm = () => {
               onComplete={() => {
                 setExpired(true); // Activar estado de expiración
                 setFormDisabled(false); // Rehabilitar el formulario
-                setMensaje("El tiempo ha expirado. Por favor, vuelva a intentar.");
+                setMensaje("El tiempo ha expirado. Por favor, vuelva a intentarlo.");
               }}
+              mensaje={mensajeTemp}
             />
           ) : (
             <Typography variant="body1" color="error" sx={{ mt: 2 }}>
-              El tiempo ha expirado. Por favor, vuelva a intentar.
+              El tiempo ha expirado. Por favor, vuelva a intentarlo.
             </Typography>
           )}
         </div>

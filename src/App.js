@@ -10,7 +10,8 @@ import { AuthProvider } from './context/AuthContext.js';
 import Validacion from './components/Validacion.js';
 import { ProductoProvider } from './context/productoContext.js';
 import Registro from './components/Registro.js';
-import RegistroOk from './components/RegistroOk.js';
+import RecuperarPass from './components/RecuperarPass.js'
+
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
               <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
               <Route path="/validacion" element={<Validacion />} />
               <Route path="/registro" element={<Registro />} />
-              <Route path="/registroOk" element={<RegistroOk />} />
+              <Route path="/recuperar" element={<RecuperarPass />} />
             </Routes>
         </BrowserRouter>
       </ProductoProvider>

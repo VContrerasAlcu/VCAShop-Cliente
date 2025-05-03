@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Temporizador = ({ days = 0, hours = 0, minutes = 0, seconds = 0, onComplete }) => {
+const Temporizador = ({ days = 0, hours = 0, minutes = 0, seconds = 0, onComplete, mensaje }) => {
   const [timeLeft, setTimeLeft] = useState({
     days,
     hours,
@@ -39,7 +39,7 @@ const Temporizador = ({ days = 0, hours = 0, minutes = 0, seconds = 0, onComplet
           <div className="card text-center" style={{ padding: "20px" }}>
             <div className="card-header bg-primary text-white">
               <h6 className="mb-0">
-                Pulse en el link que se le ha enviado al correo para completar el registro
+                {mensaje}
               </h6>
             </div>
             <div className="card-body">

@@ -78,6 +78,15 @@ export default function Validacion() {
     );
   }
 
+  function ForgotPasswordLink() {
+    return (
+      <Link to="/recuperar" style={{ textDecoration: "none", color: "#d32f2f", fontWeight: "bold", marginTop: 16 }}>
+        ¿Olvidaste la contraseña? Recupérala
+      </Link>
+    );
+  }
+  
+
   const BRANDING = {
     logo: (
       <img
@@ -113,7 +122,7 @@ export default function Validacion() {
           rememberMe: Remember,
           submitButton: CustomButton,
           signUpLink: SignUpLink,
-          
+          forgotPasswordLink: ForgotPasswordLink,
         }}
         
       />
