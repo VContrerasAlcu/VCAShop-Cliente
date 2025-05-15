@@ -6,31 +6,37 @@ import Detalles from './components/Detalles.js';
 import Barra from './components/Barra.js';
 import Compra from './components/Compra.js';
 import RutaProtegida from './components/RutaProtegida.js';
-import { AuthProvider } from './context/AuthContext.js';
 import Validacion from './components/Validacion.js';
 import { ProductoProvider } from './context/productoContext.js';
 import Registro from './components/Registro.js';
-import RecuperarPass from './components/RecuperarPass.js'
+import RecuperarPass from './components/RecuperarPass.js';
+import { ClienteProvider } from './context/ClienteContext.js';
+import {CarroProvider} from './context/CarroContext.js';
+import { SocketProvider } from './context/WebSocketContext.js';
 
 
 
 function App() {
   return (
-    <AuthProvider>
-      <ProductoProvider>
-        <BrowserRouter>
-            <Barra />
-            <Routes>
-              <Route path="/" element={<Home />}/>
-              <Route path="/detalles" element={<Detalles />} />
-              <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
-              <Route path="/validacion" element={<Validacion />} />
-              <Route path="/registro" element={<Registro />} />
-              <Route path="/recuperar" element={<RecuperarPass />} />
-            </Routes>
-        </BrowserRouter>
-      </ProductoProvider>
-    </AuthProvider>
+    <SocketProvider>
+      <ClienteProvider>
+        <CarroProvider>
+          <ProductoProvider>
+            <BrowserRouter>
+                <Barra />
+                <Routes>
+                  <Route path="/" element={<Home />}/>
+                  <Route path="/detalles" element={<Detalles />} />
+                  <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
+                  <Route path="/validacion" element={<Validacion />} />
+                  <Route path="/registro" element={<Registro />} />
+                  <Route path="/recuperar" element={<RecuperarPass />} />
+                </Routes>
+            </BrowserRouter>
+          </ProductoProvider>
+        </CarroProvider>
+      </ClienteProvider>
+    </SocketProvider>
   );
 }
 

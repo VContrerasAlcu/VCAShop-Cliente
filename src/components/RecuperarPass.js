@@ -3,7 +3,8 @@ import { TextField, Button, Box, Typography } from "@mui/material";
 import Validaciones from "../classes/Validaciones.js";
 import { useNavigate } from "react-router-dom";
 import Temporizador from "./Temporizador.js";
-import {io} from "socket.io-client";
+import { useContext } from "react";
+import { SocketContext } from "../context/WebSocketContext.js";
 
 let mailCorrecto = false;
 let passCorrecto = false;
@@ -65,6 +66,7 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   });
+  const {socket, setSocket} = useContext(SocketContext);
   const [statusBuscaCliente, setStatusBuscaCliente] = useState("");
   const [statusNuevaPass, setStatusNuevaPass] = useState("");
   const [mensaje, setMensaje] = useState("");
@@ -85,7 +87,7 @@ const RegisterForm = () => {
   const mensajeTemp = 'Pulsa en el link que se ha enviado al correo para verificar tu identidad';
 
   
-  const socket = io("http://localhost:3001");
+  
   const resetStates = () => {
     setFormDisabled(false); // Rehabilitar el formulario
     setExpired(false); // Reiniciar el estado de expiración

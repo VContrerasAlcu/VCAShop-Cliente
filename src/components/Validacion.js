@@ -2,10 +2,13 @@ import * as React from 'react';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
-import { AuthContext } from '../context/AuthContext.js';
+import { ClienteContext } from '../context/ClienteContext.js';
 import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Typography, Button } from '@mui/material';
+import { CarroContext } from '../context/CarroContext.js';
+import Carro from '../classes/Carro.js';
+import { SocketContext } from '../context/WebSocketContext.js';
 
 
 
@@ -15,7 +18,11 @@ const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
 export default function Validacion() {
   const theme = useTheme();
-  const {setAuth} = useContext(AuthContext);
+  let token = null;
+  let cliente = null;
+  const {setCliente} = useContext(ClienteContext);
+  const {setCarro} = useContext(CarroContext);
+  const {socket, setSocket} = useContext(SocketContext);
   const navigate = useNavigate();
   const signIn = async (provider, formData) => {
         fetch('http://localhost:3001/login',{
@@ -26,18 +33,42 @@ export default function Validacion() {
               password: formData.get('password')})
           })
           .then((response) => response.json())
-          .then((data) => {
-            alert(JSON.stringify(data));
-            const token = data.token || null;
-            if (token){
-              sessionStorage.setItem("token",token);
-              setAuth(token);
-              navigate('/compra');
-  
+          .then((data) => {            
+            cliente = data.cliente;
+            token = cliente.token;
+        });
+        if (token){
+            sessionStorage.setItem("cliente",cliente);
+            setCliente(cliente);
+            socket.on('connect', () => {
+              socket.emit('registro', cliente.email);
+            });
+            try {
+              const response = await fetch('http://localhost:3001/carros/cargar',{
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(cliente)
+              });
+              if (!response.ok) console.log ('Error en la petición de carro.');
+              else{
+                const data = await response.json();
+                const carro = new Carro(data, socket, cliente);
+                sessionStorage.setItem("carro", carro);
+                setCarro(carro);
+                                  
+              }
+
             }
-            else {alert("Token no devuelto por el servidor")}
-          });
-  };
+            catch(err){
+              console.log('Error al conectar con el servidor')
+            }
+
+          navigate("/");
+
+        }
+        else {alert("Cliente no autorizado por el servidor")};
+        }
+        
   function Title() {
     return <h2 style={{ marginBottom: 8 }}>Hola!!</h2>;
   }
@@ -64,7 +95,7 @@ export default function Validacion() {
         disableElevation
         fullWidth
         sx={{ my: 2 }}
-      >
+      >;
         Entrar
       </Button>
     );
@@ -91,7 +122,7 @@ export default function Validacion() {
     logo: (
       <img
         src="/images/logo.png"
-        alt="MUI logo"
+        alt="logo"
         style={{ height: 200}}
 
       />

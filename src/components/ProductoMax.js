@@ -1,15 +1,35 @@
-import { Card, CardActions, Box, Button, CardContent, CardMedia, Typography } from "@mui/material";
+import { Card, CardActions, Box, Button, CardContent, CardMedia, Typography, IconButton, TextField, Tooltip } from "@mui/material";
 import { productoContext } from "../context/productoContext.js";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+
 
 function ProductoMax(){
     const {productoEnContext} = useContext(productoContext);
     const navigate = useNavigate();
+    const [cantidad, setCantidad] = useState(0);
    
     const handleComprar = () => {
         navigate("/compra");
-    }
+    };
+
+    const handleVolver = () => {
+        navigate(-1); 
+    };
+
+    const aumentarCantidad = () => {
+        setCantidad(cantidad + 1);
+    };
+
+    const disminuirCantidad = () => {
+        if (cantidad > 1) setCantidad(cantidad - 1);
+    };
+
+
   
     return(
         <Card sx={{ maxWidth: 600, margin: "auto", mt: 4, padding: 2 }}>
@@ -20,25 +40,61 @@ function ProductoMax(){
         alt={productoEnContext?.nombre}
         />
         <CardContent>
-        <Typography variant="h4" component="div" gutterBottom>
-            {productoEnContext?.nombre}
-        </Typography>
-        <Typography variant="h6" color="text.secondary">
-            {productoEnContext?.categoria}
-        </Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
-            {productoEnContext?.descripcion}
-        </Typography>
-        <Typography variant="h5" sx={{ fontWeight: "bold", mt: 2, color: "darkblue" }}>
-            {productoEnContext?.precio} €
-        </Typography>
+            <Typography variant="h4" component="div" gutterBottom>
+                {productoEnContext?.nombre}
+            </Typography>
+            <Typography variant="h6" color="text.secondary">
+                {productoEnContext?.categoria}
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 2 }}>
+                {productoEnContext?.descripcion}
+            </Typography>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mt: 2, color: "darkblue" }}>
+                {productoEnContext?.precio} €
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 2 }}>
+                    <IconButton color="primary" onClick={disminuirCantidad}>
+                        <RemoveIcon />
+                    </IconButton>
+                    <TextField
+                        type="number"
+                        value={cantidad}
+                        onChange={(e) => setCantidad(Math.max(1, parseInt(e.target.value) || 1))}
+                        sx={{ width: "60px", textAlign: "center" }}
+                        inputProps={{ min: 1 }}
+                    />
+                    <IconButton color="primary" onClick={aumentarCantidad}>
+                        <AddIcon />
+                    </IconButton>
+            </Box>
+
         </CardContent>
         <CardActions>
-        <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-            <Button variant="contained" color="primary" onClick={handleComprar}>
-                Comprar
-            </Button>
-        </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                
+                <Tooltip title="Seguir comprando">
+                    <Button 
+                        variant="contained" 
+                        color="secondary" 
+                        onClick={handleVolver} 
+                        sx={{ fontSize: 24, padding: 1.5, minWidth: "150px" }}
+                    >
+                        <ArrowBackIcon sx={{ fontSize: 30 }} />
+                    </Button>
+                </Tooltip>
+        
+                
+                <Tooltip title="Añadir a carrito">
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={handleComprar} 
+                        sx={{ fontSize: 24, padding: 1.5, minWidth: "150px" }}
+                    >
+                        <ShoppingCartIcon sx={{ fontSize: 30 }} />
+                    </Button>
+                </Tooltip>
+            </Box>
         </CardActions>
 
         </Card>
