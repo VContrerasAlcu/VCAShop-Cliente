@@ -36,6 +36,7 @@ export default function Validacion() {
           .then((data) => {            
             cliente = data.cliente;
             token = cliente.token;
+           
         });
         if (token){
             sessionStorage.setItem("cliente",cliente);
@@ -49,6 +50,7 @@ export default function Validacion() {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(cliente)
               });
+              
               if (!response.ok) console.log ('Error en la petición de carro.');
               else{
                 const data = await response.json();
@@ -63,7 +65,7 @@ export default function Validacion() {
               console.log('Error al conectar con el servidor')
             }
 
-          navigate("/");
+            navigate("/");
 
         }
         else {alert("Cliente no autorizado por el servidor")};

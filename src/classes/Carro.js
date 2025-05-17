@@ -11,7 +11,7 @@ class Carro{
     }
     agregar(producto, cantidad){
         let problema = false;
-        this.socket.emit('agregar',{cliente:this.cliente, contenido:this.contenido,producto,cantidad});
+        this.socket.emit('agregar',{cliente:this.cliente,producto,cantidad});
         this.socket.on('respuesta_agregar', (respuesta) => {
             if (respuesta === false) problema = true;
             else this.contenido = respuesta;
@@ -23,7 +23,7 @@ class Carro{
 
     quitar(producto, cantidad){
         let problema = false;
-        this.socket.emit('quitar',{cliente:this.cliente, contenido:this.contenido,producto,cantidad});
+        this.socket.emit('quitar',{cliente:this.cliente,producto,cantidad});
         this.socket.on('respuesta_quitar', (respuesta) => {
             if (respuesta === false) problema = true;
             else this.contenido = respuesta;
@@ -36,6 +36,12 @@ class Carro{
 
     vaciar(){
         this.contenido = null;
+        let completado = false;
+        this.socket.emit('vaciar', {cliente:this.cliente});
+        this.socket.on('respuesta_vaciar', (respuesta) => {
+            completado = respuesta;
+        });
+        return completado;
     }
 
 

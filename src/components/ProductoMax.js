@@ -6,15 +6,30 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { CarroContext } from "../context/CarroContext.js";
+import { ClienteContext } from "../context/ClienteContext.js";
 
 
 function ProductoMax(){
     const {productoEnContext} = useContext(productoContext);
     const navigate = useNavigate();
     const [cantidad, setCantidad] = useState(0);
-   
-    const handleComprar = () => {
-        navigate("/compra");
+    const {carro, setCarro} = useContext(CarroContext);
+    const {cliente} = useContext(ClienteContext);
+  
+    const handleCarrito = () => {
+        if (cliente) {
+            const exito = carro.agregar(productoEnContext,cantidad);
+            if (exito) {
+                setCarro(carro);
+                alert('Producto añadido al carrito correctamente')
+            }
+            else alert('Error al añadir el producto al carrito');
+        }
+        else {
+            navigate('/validacion');
+        }
+        
     };
 
     const handleVolver = () => {
@@ -88,7 +103,7 @@ function ProductoMax(){
                     <Button 
                         variant="contained" 
                         color="primary" 
-                        onClick={handleComprar} 
+                        onClick={handleCarrito} 
                         sx={{ fontSize: 24, padding: 1.5, minWidth: "150px" }}
                     >
                         <ShoppingCartIcon sx={{ fontSize: 30 }} />
