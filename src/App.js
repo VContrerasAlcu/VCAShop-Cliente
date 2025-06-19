@@ -13,30 +13,35 @@ import RecuperarPass from './components/RecuperarPass.js';
 import { ClienteProvider } from './context/ClienteContext.js';
 import {CarroProvider} from './context/CarroContext.js';
 import { SocketProvider } from './context/WebSocketContext.js';
+import { ProductosProvider } from './context/productosContext.js';
+import CarroComp from './components/CarroComp.js';
 
 
 
 function App() {
   return (
-    <SocketProvider>
-      <ClienteProvider>
-        <CarroProvider>
-          <ProductoProvider>
-            <BrowserRouter>
-                <Barra />
-                <Routes>
-                  <Route path="/" element={<Home />}/>
-                  <Route path="/detalles" element={<Detalles />} />
-                  <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
-                  <Route path="/validacion" element={<Validacion />} />
-                  <Route path="/registro" element={<Registro />} />
-                  <Route path="/recuperar" element={<RecuperarPass />} />
-                </Routes>
-            </BrowserRouter>
-          </ProductoProvider>
-        </CarroProvider>
-      </ClienteProvider>
-    </SocketProvider>
+    <ProductosProvider>
+      <SocketProvider>
+        <ClienteProvider>
+          <CarroProvider>
+            <ProductoProvider>
+              <BrowserRouter>
+                  <Barra />
+                  <Routes>
+                    <Route path="/" element={<Home />}/>
+                    <Route path="/detalles" element={<Detalles />} />
+                    <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
+                    <Route path="/validacion" element={<Validacion />} />
+                    <Route path="/registro" element={<Registro />} />
+                    <Route path="/recuperar" element={<RecuperarPass />} />
+                    <Route path="/carro" element={<RutaProtegida><CarroComp /></RutaProtegida>} />
+                  </Routes>
+              </BrowserRouter>
+            </ProductoProvider>
+          </CarroProvider>
+        </ClienteProvider>
+      </SocketProvider>
+    </ProductosProvider>
   );
 }
 

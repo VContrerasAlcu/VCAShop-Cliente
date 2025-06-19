@@ -18,32 +18,31 @@ const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
 export default function Validacion() {
   const theme = useTheme();
-  let token = null;
   let cliente = null;
+  let token;
   const {setCliente} = useContext(ClienteContext);
-  const {setCarro} = useContext(CarroContext);
+  const {carro,setCarro} = useContext(CarroContext);
   const {socket, setSocket} = useContext(SocketContext);
   const navigate = useNavigate();
   const signIn = async (provider, formData) => {
-        fetch('http://localhost:3001/login',{
+        const response1 = await fetch('http://localhost:3001/login',{
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
               email: formData.get('email'), 
               password: formData.get('password')})
-          })
-          .then((response) => response.json())
-          .then((data) => {            
-            cliente = data.cliente;
-            token = cliente.token;
-           
-        });
+          });
+        if (!response1.ok) console.log('error en el envío de credenciales');
+        else {
+          const data1 = await response1.json();
+          cliente = data1.cliente;
+          token = cliente.token;
+        }
         if (token){
-            sessionStorage.setItem("cliente",cliente);
+            sessionStorage.setItem("cliente",JSON.stringify(cliente));
             setCliente(cliente);
-            socket.on('connect', () => {
-              socket.emit('registro', cliente.email);
-            });
+            
+            socket.emit('registro', cliente.email);
             try {
               const response = await fetch('http://localhost:3001/carros/cargar',{
                 method: "POST",
@@ -54,10 +53,13 @@ export default function Validacion() {
               if (!response.ok) console.log ('Error en la petición de carro.');
               else{
                 const data = await response.json();
-                const carro = new Carro(data, socket, cliente);
-                sessionStorage.setItem("carro", carro);
-                setCarro(carro);
-                                  
+                console.log(`data devuelto en response.json: ${data}`);
+                //const carroObjeto = new Carro(data, socket, cliente);
+                //console.log(`Información de carro antes : ${carroObjeto.contenido.length} productos, socket: ${carroObjeto.socket}, ${carroObjeto.cliente.email}`);
+                sessionStorage.setItem("carro", JSON.stringify(data));
+                setCarro(data);
+                console.log(`carro del cliente cargado. productos: ${data[0].producto.nombre}, ${data[0].cantidad}`);
+                                
               }
 
             }
@@ -97,7 +99,7 @@ export default function Validacion() {
         disableElevation
         fullWidth
         sx={{ my: 2 }}
-      >;
+      >
         Entrar
       </Button>
     );

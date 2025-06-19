@@ -6,7 +6,7 @@ class Producto{
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
-        this.imagen = "http://localhost:3001" + imagen;
+        this.imagen = /*"http://localhost:3001" + */imagen;
         this.categoria = categoria;
        
     }

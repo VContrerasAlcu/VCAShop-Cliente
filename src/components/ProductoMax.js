@@ -1,6 +1,6 @@
 import { Card, CardActions, Box, Button, CardContent, CardMedia, Typography, IconButton, TextField, Tooltip } from "@mui/material";
 import { productoContext } from "../context/productoContext.js";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -8,21 +8,84 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { CarroContext } from "../context/CarroContext.js";
 import { ClienteContext } from "../context/ClienteContext.js";
+import Carro from "../classes/Carro.js";
+import { SocketContext } from "../context/WebSocketContext.js";
+import { productosContext } from "../context/productosContext.js";
+import CircularProgress from "@mui/material/CircularProgress";
+import actualizarProductos from "../services/actualizacionProductos.js";
+import Producto from "../classes/Producto.js";
+
+
+function actualizarStock(producto, cantidad){
+    producto.stock -= cantidad;
+    return producto;
+}
+
+
 
 
 function ProductoMax(){
-    const {productoEnContext} = useContext(productoContext);
+    const {productoEnContext, setProducto} = useContext(productoContext);
     const navigate = useNavigate();
     const [cantidad, setCantidad] = useState(0);
+    const {socket} = useContext(SocketContext);
     const {carro, setCarro} = useContext(CarroContext);
     const {cliente} = useContext(ClienteContext);
+    const {productos, setProductos} = useContext(productosContext);
+    
+
   
-    const handleCarrito = () => {
+    const handleCarrito = async () => {
         if (cliente) {
-            const exito = carro.agregar(productoEnContext,cantidad);
-            if (exito) {
-                setCarro(carro);
-                alert('Producto añadido al carrito correctamente')
+            
+            
+            const nuevoCarro = new Carro(carro, socket, cliente);
+            console.log(`dentro de handle carrito. carro:  ${nuevoCarro.socket}, ${nuevoCarro.cliente.email}`);
+            const resultado = await nuevoCarro.agregar(productoEnContext,cantidad);
+            if (resultado !== false) {
+                console.log(`nuevocarro contenido tras agregar: ${nuevoCarro.contenido[0].producto.nombre}`);
+                setCarro([...nuevoCarro.contenido]);
+                /*setCarro(carro);
+                const productoActualizado = actualizarStock(productoEnContext, cantidad);
+                setProducto(productoActualizado);
+                const productosActualizado = actualizarProductos(productoActualizado, productos); 
+                setProductos(productosActualizado);*/
+                navigate('/');
+                socket.on("stock_actualizado", (productoRecibido) => {
+                    console.log(`estoy en on stock actualizado. producto recibido: ${productoRecibido.nombre}, ${productoRecibido.stock}`);
+                    const productoActualizado = new Producto(productoRecibido.id,
+                                                  productoRecibido.nombre,
+                                                  productoRecibido.descripcion,
+                                                  productoRecibido.precio,
+                                                  productoRecibido.stock,
+                                                  productoRecibido.imagen,
+                                                  productoRecibido.categoria);
+                    
+                    const actualizados = actualizarProductos(productos,productoActualizado);
+                    setProductos([...actualizados]);
+                    
+
+                    
+
+                     // Crear una COPIA PROFUNDA del array actual para evitar mutaciones
+                    //const productosCopy = JSON.parse(JSON.stringify(productos));
+                    
+                    // Actualizar el producto específico
+                    /* productosActualizados = productosCopy.map(item => 
+                        item.id === producto.id ? { ...producto } : item
+                    );*/
+                    
+                    
+                    //console.log(`prueba de productos actualizados. ${productosActualizados[0].nombre}, ${productosActualizados[0].stock}`);
+                    //setProductos([...productosActualizados]);
+                    //setProductos(productosActualizados.map(producto => ({ ...producto })));
+                    
+                    
+                
+                });
+
+
+                
             }
             else alert('Error al añadir el producto al carrito');
         }
@@ -31,9 +94,12 @@ function ProductoMax(){
         }
         
     };
+   
+    /*const productoEnProductos = productos.find((producto) => producto.id === 6);
+    console.log(`stock en el array context productos: ${productoEnProductos.stock}`);*/
 
     const handleVolver = () => {
-        navigate(-1); 
+        navigate('/'); 
     };
 
     const aumentarCantidad = () => {
@@ -41,7 +107,7 @@ function ProductoMax(){
     };
 
     const disminuirCantidad = () => {
-        if (cantidad > 1) setCantidad(cantidad - 1);
+        if (cantidad > 0) setCantidad(cantidad - 1);
     };
 
 
@@ -67,6 +133,9 @@ function ProductoMax(){
             <Typography variant="h5" sx={{ fontWeight: "bold", mt: 2, color: "darkblue" }}>
                 {productoEnContext?.precio} €
             </Typography>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mt: 2, color: "darkblue" }}>
+                {productoEnContext?.stock} stock
+            </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 2 }}>
                     <IconButton color="primary" onClick={disminuirCantidad}>
                         <RemoveIcon />
@@ -74,9 +143,12 @@ function ProductoMax(){
                     <TextField
                         type="number"
                         value={cantidad}
-                        onChange={(e) => setCantidad(Math.max(1, parseInt(e.target.value) || 1))}
+                        onChange={(e) => {
+                            const nuevoValor = parseInt(e.target.value) || 1;
+                            setCantidad(nuevoValor < 1 ? 1 : nuevoValor);
+                        }}
                         sx={{ width: "60px", textAlign: "center" }}
-                        inputProps={{ min: 1 }}
+                        inputProps={{ inputMode: "numeric", min: 1 }}
                     />
                     <IconButton color="primary" onClick={aumentarCantidad}>
                         <AddIcon />

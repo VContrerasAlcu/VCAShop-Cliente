@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useContext } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,6 +16,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Link } from 'react-router-dom';
+import { CarroContext } from '../context/CarroContext.js';
+
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -57,6 +63,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const {carro} = useContext(CarroContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -102,6 +109,13 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+ useEffect(() => {
+  if (carro){
+    console.log("Barra re-renderizada. Productos en carro:", carro.length);
+  }  
+}, [carro]);
+
+
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -128,16 +142,14 @@ export default function PrimarySearchAppBar() {
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
+        <IconButton size="large" color="inherit" component={Link} to="/carro">
+            <Badge badgeContent={carro ? carro.length : 0} color="error">
+                <ShoppingCartIcon />
+            </Badge>
         </IconButton>
-        <p>Notifications</p>
+
+
+        <p>Carro</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -167,14 +179,11 @@ export default function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            MUI
-          </Typography>
+          <IconButton component={Link} to="/" sx={{ p: 0 }}>
+            <img src= "/images/logoTransp.png" alt="Logo" style={{ height: "90px", cursor: "pointer" }} />
+          </IconButton>
+
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -191,15 +200,13 @@ export default function PrimarySearchAppBar() {
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
+            <IconButton size="large" color="inherit" component={Link} to="/carro">
+                <Badge badgeContent={carro ? carro.length : 0} color="error">
+                    <ShoppingCartIcon  />
+                </Badge>
             </IconButton>
+
+
             <IconButton
               size="large"
               edge="end"

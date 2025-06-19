@@ -40,6 +40,12 @@ function ProductoMin({producto}){
           >
             {producto.precio} €
           </Typography>
+          <Typography 
+            variant="h6" 
+            sx={{ fontWeight: 'bold', color: 'darkblue', textAlign: 'center' }}
+          >
+            {producto.stock} en stock
+          </Typography>
 
           <Typography 
             variant="body2" 

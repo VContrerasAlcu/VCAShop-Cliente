@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         const cliente = sessionStorage.getItem("cliente");
-        setCliente(cliente ? cliente : null);
+        setCliente(cliente ? JSON.parse(cliente) : null);
     }, []);
 
     return (
