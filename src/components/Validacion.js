@@ -2,10 +2,13 @@ import * as React from 'react';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
-import { AuthContext } from '../context/AuthContext.js';
+import { ClienteContext } from '../context/ClienteContext.js';
 import { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Typography, Button } from '@mui/material';
+import { CarroContext } from '../context/CarroContext.js';
+import Carro from '../classes/Carro.js';
+import { SocketContext } from '../context/WebSocketContext.js';
 
 
 
@@ -15,29 +18,61 @@ const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
 export default function Validacion() {
   const theme = useTheme();
-  const {setAuth} = useContext(AuthContext);
+  let cliente = null;
+  let token;
+  const {setCliente} = useContext(ClienteContext);
+  const {carro,setCarro} = useContext(CarroContext);
+  const {socket, setSocket} = useContext(SocketContext);
   const navigate = useNavigate();
   const signIn = async (provider, formData) => {
-        fetch('http://localhost:3001/login',{
+        const response1 = await fetch('http://localhost:3001/login',{
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
               email: formData.get('email'), 
               password: formData.get('password')})
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            alert(JSON.stringify(data));
-            const token = data.token || null;
-            if (token){
-              sessionStorage.setItem("token",token);
-              setAuth(token);
-              navigate('/compra');
-  
-            }
-            else {alert("Token no devuelto por el servidor")}
           });
-  };
+        if (!response1.ok) console.log('error en el envío de credenciales');
+        else {
+          const data1 = await response1.json();
+          cliente = data1.cliente;
+          token = cliente.token;
+        }
+        if (token){
+            sessionStorage.setItem("cliente",JSON.stringify(cliente));
+            setCliente(cliente);
+            
+            socket.emit('registro', cliente.email);
+            try {
+              const response = await fetch('http://localhost:3001/carros/cargar',{
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(cliente)
+              });
+              
+              if (!response.ok) console.log ('Error en la petición de carro.');
+              else{
+                const data = await response.json();
+                console.log(`data devuelto en response.json: ${data}`);
+                //const carroObjeto = new Carro(data, socket, cliente);
+                //console.log(`Información de carro antes : ${carroObjeto.contenido.length} productos, socket: ${carroObjeto.socket}, ${carroObjeto.cliente.email}`);
+                sessionStorage.setItem("carro", JSON.stringify(data));
+                setCarro(data);
+                console.log(`carro del cliente cargado. productos: ${data[0].producto.nombre}, ${data[0].cantidad}`);
+                                
+              }
+
+            }
+            catch(err){
+              console.log('Error al conectar con el servidor')
+            }
+
+            navigate("/");
+
+        }
+        else {alert("Cliente no autorizado por el servidor")};
+        }
+        
   function Title() {
     return <h2 style={{ marginBottom: 8 }}>Hola!!</h2>;
   }
@@ -91,7 +126,7 @@ export default function Validacion() {
     logo: (
       <img
         src="/images/logo.png"
-        alt="MUI logo"
+        alt="logo"
         style={{ height: 200}}
 
       />
