@@ -6,6 +6,7 @@ import { productosContext } from "../context/productosContext.js";
 import { SocketContext } from "../context/WebSocketContext.js";
 import actualizarProductos from "../services/actualizacionProductos.js";
 import { CarroContext } from "../context/CarroContext.js";
+import { productoEnCarro } from "../services/utilsCarro.js";
 
 
 function Home() {
@@ -62,7 +63,12 @@ function Home() {
                 listStyle: 'none'
             }}>
                 {productos.map((producto) => (
-                    <li key={producto.id}><ProductoMin producto={producto} /></li>
+                    carro ? 
+                        !productoEnCarro(producto,carro) ? <li key={producto.id}><ProductoMin producto={producto} /></li>
+                                                         : null
+                    : <li key={producto.id}><ProductoMin producto={producto} /></li>
+                 
+                    
                 ))}
             </ul>
         </div>

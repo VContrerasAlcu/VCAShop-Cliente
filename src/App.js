@@ -15,6 +15,7 @@ import {CarroProvider} from './context/CarroContext.js';
 import { SocketProvider } from './context/WebSocketContext.js';
 import { ProductosProvider } from './context/productosContext.js';
 import CarroComp from './components/CarroComp.js';
+import ClienteDatos from './components/ClienteDatos.js';
 
 
 
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/registro" element={<Registro />} />
                     <Route path="/recuperar" element={<RecuperarPass />} />
                     <Route path="/carro" element={<RutaProtegida><CarroComp /></RutaProtegida>} />
+                    <Route path="/datosCliente" element={<RutaProtegida><ClienteDatos /></RutaProtegida>} />
                   </Routes>
               </BrowserRouter>
             </ProductoProvider>
