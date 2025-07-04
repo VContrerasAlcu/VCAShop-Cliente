@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { useEffect, useContext } from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Badge,
+  MenuItem,
+  Menu
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
 import { CarroContext } from '../context/CarroContext.js';
-
+import { ClienteContext } from '../context/ClienteContext.js';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -52,7 +52,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -63,12 +62,27 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-  const {carro} = useContext(CarroContext);
+  const { carro, setCarro } = useContext(CarroContext);
+  const { cliente, setCliente } = useContext(ClienteContext);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  useEffect(() => {
+    const clienteGuardado = sessionStorage.getItem("cliente");
+    
+    if (clienteGuardado) {
+      try {
+        const clienteParse = JSON.parse(clienteGuardado);
+        console.log(`cliente que recupero en barra: ${clienteParse.email}`);
+        setCliente(clienteParse);
+      } catch (e) {
+        console.warn("Cliente guardado malformado:", clienteGuardado);
+      }
+    }
+  }, []);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -87,6 +101,20 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogout = () => {
+    setCliente(null);
+    setCarro(null);
+    sessionStorage.removeItem("carro");
+    sessionStorage.removeItem("cliente");
+    handleMenuClose();
+  };
+
+  useEffect(() => {
+    if (carro) {
+      console.log("Barra re-renderizada. Productos en carro:", carro.length);
+    }
+  }, [carro]);
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -104,17 +132,22 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {cliente ? (
+        <>
+          <MenuItem component={Link} to="/datosCliente" onClick={handleMenuClose}>
+            Mi cuenta
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            Cerrar sesión
+          </MenuItem>
+        </>
+      ) : (
+        <MenuItem component={Link} to="/validacion" onClick={handleMenuClose}>
+          Entrar
+        </MenuItem>
+      )}
     </Menu>
   );
-
- useEffect(() => {
-  if (carro){
-    console.log("Barra re-renderizada. Productos en carro:", carro.length);
-  }  
-}, [carro]);
-
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -134,34 +167,25 @@ export default function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
+        <IconButton size="large" color="inherit" component={Link} to="/carro">
+          <Badge badgeContent={carro ? carro.length : 0} color="error">
+            <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" color="inherit" component={Link} to="/carro">
-            <Badge badgeContent={carro ? carro.length : 0} color="error">
-                <ShoppingCartIcon />
-            </Badge>
-        </IconButton>
-
-
         <p>Carro</p>
       </MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
-          aria-label="account of current user"
+          aria-label="cuenta de usuario"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>Perfil</p>
       </MenuItem>
     </Menu>
   );
@@ -179,38 +203,38 @@ export default function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <IconButton component={Link} to="/" sx={{ p: 0 }}>
-            <img src= "/images/logoTransp.png" alt="Logo" style={{ height: "90px", cursor: "pointer" }} />
-          </IconButton>
 
+          <IconButton component={Link} to="/" sx={{ p: 0 }}>
+            <img
+              src="/images/logoTransp.png"
+              alt="Logo"
+              style={{ height: "90px", cursor: "pointer" }}
+            />
+          </IconButton>
 
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              placeholder="Buscar…"
+              inputProps={{ 'aria-label': 'buscar' }}
             />
           </Search>
+
           <Box sx={{ flexGrow: 1 }} />
+
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
+            <IconButton size="large" color="inherit" component={Link} to="/carro">
+              <Badge badgeContent={carro ? carro.length : 0} color="error">
+                <ShoppingCartIcon />
               </Badge>
             </IconButton>
-            <IconButton size="large" color="inherit" component={Link} to="/carro">
-                <Badge badgeContent={carro ? carro.length : 0} color="error">
-                    <ShoppingCartIcon  />
-                </Badge>
-            </IconButton>
-
 
             <IconButton
               size="large"
               edge="end"
-              aria-label="account of current user"
+              aria-label="cuenta de usuario"
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
@@ -219,10 +243,11 @@ export default function PrimarySearchAppBar() {
               <AccountCircle />
             </IconButton>
           </Box>
+
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="show more"
+              aria-label="mostrar más"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
@@ -233,6 +258,7 @@ export default function PrimarySearchAppBar() {
           </Box>
         </Toolbar>
       </AppBar>
+
       {renderMobileMenu}
       {renderMenu}
     </Box>

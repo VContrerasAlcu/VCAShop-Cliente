@@ -42,14 +42,15 @@ class Carro{
     }
 
 
-    vaciar(){
-        this.contenido = null;
-        let completado = false;
-        this.socket.emit('vaciar', {cliente:this.cliente});
-        this.socket.on('respuesta_vaciar', (respuesta) => {
-            completado = respuesta;
+    vaciar() {
+        return new Promise((resolve) => {
+            console.log(`envio a servidor desde vaciar. cliente: ${this.cliente.email}`);
+            this.socket.emit("vaciar", { cliente: this.cliente });
+            this.socket.once("respuesta_vaciar", (respuesta) => {
+                this.contenido = [];
+                resolve(respuesta); // true o false
+            });
         });
-        return completado;
     }
 
 

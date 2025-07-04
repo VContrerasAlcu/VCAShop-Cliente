@@ -62,13 +62,15 @@ const CarroComp = () => {
 
 
             {/* Botones de acción */}
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Button variant="contained" color="secondary" onClick={volver}>
-                    Volver
-                </Button>
+            <Box sx={{ display: "flex", justifyContent: carro.length > 0 ? "space-between" : "center", mt: 3 }}>
+            <Button variant="contained" color="secondary" onClick={volver}>
+                Volver
+            </Button>
+            {carro.length > 0 && (
                 <Button variant="contained" color="primary" onClick={() => navigate("/compra")}>
-                    Comprar
+                Comprar
                 </Button>
+            )}
             </Box>
         </Box>
     );
