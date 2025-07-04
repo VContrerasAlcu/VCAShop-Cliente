@@ -69,6 +69,11 @@ const Compra = () => {
         Ds_MerchantParameters: data.params,
         Ds_Signature: data.signature
       };
+      console.log("Formulario que se va a enviar:");
+      console.log("Signature Version:", data.version);
+      console.log("Merchant Parameters:", data.params);
+      console.log("Signature:", data.signature);
+      
 
       for (const [key, value] of Object.entries(campos)) {
         const input = document.createElement("input");

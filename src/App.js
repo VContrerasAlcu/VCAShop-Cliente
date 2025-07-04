@@ -16,6 +16,8 @@ import { SocketProvider } from './context/WebSocketContext.js';
 import { ProductosProvider } from './context/productosContext.js';
 import CarroComp from './components/CarroComp.js';
 import ClienteDatos from './components/ClienteDatos.js';
+import PagoOk from './components/PagoOk.js';
+import PagoError from './components/PagoError.js';
 
 
 
@@ -37,6 +39,8 @@ function App() {
                     <Route path="/recuperar" element={<RecuperarPass />} />
                     <Route path="/carro" element={<RutaProtegida><CarroComp /></RutaProtegida>} />
                     <Route path="/datosCliente" element={<RutaProtegida><ClienteDatos /></RutaProtegida>} />
+                    <Route path="/pagoOk" element={<PagoOk />} />
+                    <Route path="/pagoError" element={<PagoError />} />
                   </Routes>
               </BrowserRouter>
             </ProductoProvider>

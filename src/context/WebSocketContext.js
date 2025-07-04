@@ -7,7 +7,11 @@ export const SocketContext = createContext();
 export function SocketProvider({children}){
     const [socket, setSocket] = useState(null);
     useEffect(() => {
-        const webSocket = io('http://localhost:3001');
+        const webSocket = io('http://localhost:3001',{
+            autoConnect: true,
+            reconnection: true
+            }
+        );
         webSocket.on('connect',() => {
             console.log('cliente enviado connect');
         });

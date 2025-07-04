@@ -70,6 +70,19 @@ export default function PrimarySearchAppBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  useEffect(() => {
+    const clienteGuardado = sessionStorage.getItem("cliente");
+    
+    if (clienteGuardado) {
+      try {
+        const clienteParse = JSON.parse(clienteGuardado);
+        console.log(`cliente que recupero en barra: ${clienteParse.email}`);
+        setCliente(clienteParse);
+      } catch (e) {
+        console.warn("Cliente guardado malformado:", clienteGuardado);
+      }
+    }
+  }, []);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);

@@ -9,7 +9,7 @@ import {
   Alert
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ClienteContext } from "../context/ClienteContext.js";
 import { useNavigate } from "react-router-dom";
 import actualizarCliente from "../services/actualizacionClientes.js";
@@ -24,6 +24,14 @@ const ClienteDatos = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (!cliente){
+      const clienteSesion = JSON.parse(sessionStorage.getItem("cliente"));
+      setCliente(clienteSesion);
+    }
+  }, []);
+
 
   const handleGuardar = async () => {
     if (!nombre.trim()) {
