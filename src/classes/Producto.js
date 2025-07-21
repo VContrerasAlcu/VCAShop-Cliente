@@ -1,6 +1,6 @@
 
 class Producto{
-    constructor(id, nombre, descripcion, precio, stock, imagen, categoria){
+    constructor(id, nombre, descripcion, precio, stock, imagen, categoria, destacado = false){
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -8,6 +8,7 @@ class Producto{
         this.stock = stock;
         this.imagen = /*"http://localhost:3001" + */imagen;
         this.categoria = categoria;
+        this.destacado = destacado
        
     }
 }

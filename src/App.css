@@ -28,7 +28,13 @@
   color: #61dafb;
 }
 
-
+body {
+  background-image: url('./assets/logoFondoTransp.png'); /* ajusta la ruta si está en /public */
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: auto 60%;
+  background-attachment: fixed;
+}
 
 @keyframes App-logo-spin {
   from {

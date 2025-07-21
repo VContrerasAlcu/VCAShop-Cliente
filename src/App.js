@@ -18,6 +18,7 @@ import CarroComp from './components/CarroComp.js';
 import ClienteDatos from './components/ClienteDatos.js';
 import PagoOk from './components/PagoOk.js';
 import PagoError from './components/PagoError.js';
+import { CategoriaProvider } from './context/CategoriaContext.js';
 
 
 
@@ -28,21 +29,23 @@ function App() {
         <ClienteProvider>
           <CarroProvider>
             <ProductoProvider>
-              <BrowserRouter>
-                  <Barra />
-                  <Routes>
-                    <Route path="/" element={<Home />}/>
-                    <Route path="/detalles" element={<Detalles />} />
-                    <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
-                    <Route path="/validacion" element={<Validacion />} />
-                    <Route path="/registro" element={<Registro />} />
-                    <Route path="/recuperar" element={<RecuperarPass />} />
-                    <Route path="/carro" element={<RutaProtegida><CarroComp /></RutaProtegida>} />
-                    <Route path="/datosCliente" element={<RutaProtegida><ClienteDatos /></RutaProtegida>} />
-                    <Route path="/pagoOk" element={<PagoOk />} />
-                    <Route path="/pagoError" element={<PagoError />} />
-                  </Routes>
-              </BrowserRouter>
+              <CategoriaProvider>
+                <BrowserRouter>
+                    <Barra />
+                    <Routes>
+                      <Route path="/" element={<Home />}/>
+                      <Route path="/detalles" element={<Detalles />} />
+                      <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
+                      <Route path="/validacion" element={<Validacion />} />
+                      <Route path="/registro" element={<Registro />} />
+                      <Route path="/recuperar" element={<RecuperarPass />} />
+                      <Route path="/carro" element={<RutaProtegida><CarroComp /></RutaProtegida>} />
+                      <Route path="/datosCliente" element={<RutaProtegida><ClienteDatos /></RutaProtegida>} />
+                      <Route path="/pagoOk" element={<PagoOk />} />
+                      <Route path="/pagoError" element={<PagoError />} />
+                    </Routes>
+                </BrowserRouter>
+              </CategoriaProvider>
             </ProductoProvider>
           </CarroProvider>
         </ClienteProvider>
