@@ -19,6 +19,7 @@ import ClienteDatos from './components/ClienteDatos.js';
 import PagoOk from './components/PagoOk.js';
 import PagoError from './components/PagoError.js';
 import { CategoriaProvider } from './context/CategoriaContext.js';
+import Buscar from './components/Buscar.js';
 
 
 
@@ -33,7 +34,7 @@ function App() {
                 <BrowserRouter>
                     <Barra />
                     <Routes>
-                      <Route path="/" element={<Home />}/>
+                      <Route path="/" element={<Home />} />
                       <Route path="/detalles" element={<Detalles />} />
                       <Route path="/compra" element={<RutaProtegida><Compra /></RutaProtegida>} />
                       <Route path="/validacion" element={<Validacion />} />
@@ -43,6 +44,7 @@ function App() {
                       <Route path="/datosCliente" element={<RutaProtegida><ClienteDatos /></RutaProtegida>} />
                       <Route path="/pagoOk" element={<PagoOk />} />
                       <Route path="/pagoError" element={<PagoError />} />
+                      <Route path="/buscar" element={<Buscar />} />
                     </Routes>
                 </BrowserRouter>
               </CategoriaProvider>

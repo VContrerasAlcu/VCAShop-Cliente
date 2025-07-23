@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
@@ -27,6 +27,9 @@ import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DevicesIcon from "@mui/icons-material/Devices";
 import HomeIcon from "@mui/icons-material/Home";
 import "@fontsource/inter";
+import { navigate } from "react-router-dom";
+
+
 
 
 const Search = styled("div")(({ theme }) => ({
@@ -80,6 +83,13 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isMenuLateralOpen = Boolean(menuLateralAnchorEl);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
+
+  const handleSearchKey = (e) => {
+    if (e.key === "Enter" && textoBusqueda.trim()) {
+      navigate(`/buscar?texto=${encodeURIComponent(textoBusqueda.trim())}`);
+    }
+  };
 
   useEffect(() => {
     const clienteGuardado = sessionStorage.getItem("cliente");
@@ -152,9 +162,15 @@ export default function PrimarySearchAppBar() {
           <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
         </>
       ) : (
+        <>
         <MenuItem component={Link} to="/validacion" onClick={handleMenuClose}>
           Entrar
         </MenuItem>
+        <MenuItem component={Link} to="/registro" onClick={handleMenuClose}>
+          Registrarse
+        </MenuItem>
+        </>
+
       )}
     </Menu>
   );
@@ -298,6 +314,11 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="Buscar…"
               inputProps={{ "aria-label": "buscar" }}
+              value={textoBusqueda}
+              onChange={(e) => setTextoBusqueda(e.target.value)}
+              onKeyDown={handleSearchKey}
+
+
             />
           </Search>
 
