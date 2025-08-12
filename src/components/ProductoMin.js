@@ -8,6 +8,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { productoContext } from "../context/productoContext.js";
 import {useContext} from 'react';
+import InfoIcon from '@mui/icons-material/Info';
+
+
 
 function ProductoMin({producto}){
     const navigate = useNavigate();
@@ -18,7 +21,23 @@ function ProductoMin({producto}){
 
     }
     return (
-      <Card sx={{ maxWidth: 200, height: 400, display: 'flex', flexDirection: 'column' }}>
+      <Card 
+        onClick={handleInformacion}
+        sx={{
+          maxWidth: 200,
+          height: 400,
+          display: "flex",
+          flexDirection: "column",
+          cursor: "pointer",
+          transition: "transform 0.2s ease-in-out",
+          "&:hover": {
+            transform: "scale(1.03)",
+            boxShadow: 4,
+          },
+        }}
+      >
+
+
         <CardMedia
           component="img"
           alt={producto.nombre}
@@ -40,12 +59,7 @@ function ProductoMin({producto}){
           >
             {producto.precio} €
           </Typography>
-          <Typography 
-            variant="h6" 
-            sx={{ fontWeight: 'bold', color: 'darkblue', textAlign: 'center' }}
-          >
-            {producto.stock} en stock
-          </Typography>
+          
 
           <Typography 
             variant="body2" 
@@ -54,10 +68,7 @@ function ProductoMin({producto}){
             {producto.descripcion}
           </Typography>
         </CardContent>
-        <CardActions sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-          <Button size="small">Comprar</Button>
-          <Button size="small" onClick={handleInformacion}>Más información</Button>
-        </CardActions>
+
       </Card>
       );
 }

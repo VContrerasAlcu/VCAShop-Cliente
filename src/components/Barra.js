@@ -27,49 +27,14 @@ import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DevicesIcon from "@mui/icons-material/Devices";
 import HomeIcon from "@mui/icons-material/Home";
 import "@fontsource/inter";
-import { navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import BuscadorAutocompleto from "./BuscadorAutocompleto.js";
+import BuscadorResponsivo from "./BuscadorResponsivo.js";
+import Chip from "@mui/material/Chip";
+import PlaceIcon from '@mui/icons-material/Place';
 
 
 
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
 
 export default function PrimarySearchAppBar() {
   const { carro, setCarro } = useContext(CarroContext);
@@ -84,12 +49,9 @@ export default function PrimarySearchAppBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isMenuLateralOpen = Boolean(menuLateralAnchorEl);
   const [textoBusqueda, setTextoBusqueda] = useState("");
+  const navigate = useNavigate();
 
-  const handleSearchKey = (e) => {
-    if (e.key === "Enter" && textoBusqueda.trim()) {
-      navigate(`/buscar?texto=${encodeURIComponent(textoBusqueda.trim())}`);
-    }
-  };
+
 
   useEffect(() => {
     const clienteGuardado = sessionStorage.getItem("cliente");
@@ -307,20 +269,9 @@ export default function PrimarySearchAppBar() {
             />
           </IconButton>
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Buscar…"
-              inputProps={{ "aria-label": "buscar" }}
-              value={textoBusqueda}
-              onChange={(e) => setTextoBusqueda(e.target.value)}
-              onKeyDown={handleSearchKey}
-
-
-            />
-          </Search>
+          <Box sx={{ width: 300, ml:4 }}>
+            <BuscadorResponsivo />
+          </Box>
 
           <Box sx={{ flexGrow: 1 }} />
 
@@ -363,29 +314,59 @@ export default function PrimarySearchAppBar() {
       {renderMenu}
       {renderMenuLateral}
       <Box sx={{ bgcolor: "#8B5E3C", px: 2, py: 1 }}>
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 2 , fontFamily: "Inter, sans-serif",}}>
-            {["Juguetes", "Ropa", "Electrónica", "Hogar", "Destacados"].map((cat) => (
-              <Typography
-                key={cat}
-                variant="body2"
-                onClick={() => { 
-                                const nomCat = cat === "Electrónica" ? "Electronica" : cat;
-                                setCategoriaSeleccionada(nomCat.toLowerCase());
-                              }}
-                sx={{
-                  cursor: "pointer",
-                  textTransform: "uppercase",
-                  fontWeight: cat === "Destacados" ? "bold" : "normal",
-                  color: cat === "Destacados" ? "warning.main" : "text.primary",
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-              >
-                {cat}
-              </Typography>
-            ))}
-          </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, fontFamily: "Inter, sans-serif" }}>
+          {["Juguetes", "Ropa", "Electrónica", "Hogar", "Destacados"].map((cat) => (
+            <Typography
+              key={cat}
+              variant="body2"
+              onClick={() => {
+                const nomCat = cat === "Electrónica" ? "Electronica" : cat;
+                setCategoriaSeleccionada(nomCat.toLowerCase());
+              }}
+              sx={{
+                cursor: "pointer",
+                textTransform: "uppercase",
+                fontWeight: cat === "Destacados" ? "bold" : "normal",
+                color: cat === "Destacados" ? "warning.main" : "white",
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+                px: 1.2,
+                py: 0.5,
+                borderRadius: 2,
+                bgcolor: cat === "Destacados" ? "warning.light" : "rgba(255,255,255,0.1)",
+                "&:hover": {
+                  bgcolor: "rgba(255,255,255,0.25)",
+                },
+              }}
+            >
+              {cat === "Juguetes" && <ToysIcon sx={{ fontSize: 18 }} />}
+              {cat === "Ropa" && <CheckroomIcon sx={{ fontSize: 18 }} />}
+              {cat === "Electrónica" && <DevicesIcon sx={{ fontSize: 18 }} />}
+              {cat === "Hogar" && <HomeIcon sx={{ fontSize: 18 }} />}
+              {cat === "Destacados" && <StarIcon sx={{ fontSize: 18 }} />}
+              {cat}
+            </Typography>
+          ))}
+          <Chip
+            label="Conócenos"
+            icon={<PlaceIcon />}
+            component={Link}
+            to="/conocenos"
+            clickable
+            sx={{
+              bgcolor: "primary.main",
+              color: "white",
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              "&:hover": {
+                bgcolor: "primary.dark",
+              },
+            }}
+          />
+
+
+        </Box>
       </Box>
     </Box>
   );

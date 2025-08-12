@@ -99,7 +99,7 @@ function ProductoMax(){
     console.log(`stock en el array context productos: ${productoEnProductos.stock}`);*/
 
     const handleVolver = () => {
-        navigate('/'); 
+        navigate(-1); 
     };
 
     const aumentarCantidad = () => {

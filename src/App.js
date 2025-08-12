@@ -20,6 +20,7 @@ import PagoOk from './components/PagoOk.js';
 import PagoError from './components/PagoError.js';
 import { CategoriaProvider } from './context/CategoriaContext.js';
 import Buscar from './components/Buscar.js';
+import Conocenos from './components/Conocenos.js';
 
 
 
@@ -45,6 +46,7 @@ function App() {
                       <Route path="/pagoOk" element={<PagoOk />} />
                       <Route path="/pagoError" element={<PagoError />} />
                       <Route path="/buscar" element={<Buscar />} />
+                      <Route path="/conocenos" element={<Conocenos />} />
                     </Routes>
                 </BrowserRouter>
               </CategoriaProvider>

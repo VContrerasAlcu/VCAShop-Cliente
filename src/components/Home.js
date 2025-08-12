@@ -63,7 +63,7 @@ function Home() {
             <ul style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
                 gap: '10px',
                 padding: 0,
                 listStyle: 'none'
