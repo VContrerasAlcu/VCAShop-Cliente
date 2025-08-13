@@ -8,6 +8,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Componente RecuperarPass
+ * Permite recuperar la contraseña en tres fases: envío de código, verificación y cambio.
+ */
 const RecuperarPass = () => {
   const [fase, setFase] = useState("inicio"); // 'inicio', 'codigo', 'completado'
   const [email, setEmail] = useState("");
@@ -18,7 +22,9 @@ const RecuperarPass = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Paso 1: Enviar código al correo
+  /**
+   * Paso 1: Enviar código al correo
+   */
   const iniciarRecuperacion = async () => {
     setError("");
     setMensaje("");
@@ -40,7 +46,9 @@ const RecuperarPass = () => {
     }
   };
 
-  // Paso 2: Verificar código y establecer nueva contraseña
+  /**
+   * Paso 2: Verificar código y establecer nueva contraseña
+   */
   const cambiarPassword = async () => {
     setError("");
     if (nuevaPass !== confirmPass) {
@@ -70,6 +78,9 @@ const RecuperarPass = () => {
     }
   };
 
+  /**
+   * Renderiza el formulario según la fase actual
+   */
   return (
     <Box
       sx={{
@@ -82,6 +93,7 @@ const RecuperarPass = () => {
         backgroundColor: "#fff"
       }}
     >
+      {/* Logo y título */}
       <Box sx={{ textAlign: "center", mb: 3 }}>
         <img src="/images/logo.png" alt="Logo" style={{ maxWidth: "180px" }} />
         <Typography variant="h5" sx={{ fontWeight: "bold", mt: 1 }}>
@@ -89,6 +101,7 @@ const RecuperarPass = () => {
         </Typography>
       </Box>
 
+      {/* Fase 1: Solicitar correo */}
       {fase === "inicio" && (
         <>
           <TextField
@@ -110,6 +123,7 @@ const RecuperarPass = () => {
         </>
       )}
 
+      {/* Fase 2: Verificar código y cambiar contraseña */}
       {fase === "codigo" && (
         <>
           <Typography sx={{ mt: 2 }}>
@@ -150,6 +164,7 @@ const RecuperarPass = () => {
         </>
       )}
 
+      {/* Fase 3: Confirmación */}
       {fase === "completado" && (
         <>
           <Typography color="success.main" sx={{ mt: 2 }}>
@@ -167,6 +182,7 @@ const RecuperarPass = () => {
         </>
       )}
 
+      {/* Mensajes de error o éxito */}
       {(mensaje || error) && (
         <>
           <Divider sx={{ my: 2 }} />

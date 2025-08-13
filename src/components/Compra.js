@@ -1,3 +1,4 @@
+// Importaciones de React y Material UI
 import { useContext, useEffect, useState } from "react";
 import {
   Box,
@@ -12,26 +13,48 @@ import {
   Snackbar,
   Alert
 } from "@mui/material";
+
+// Ícono para guardar dirección
 import SaveIcon from "@mui/icons-material/Save";
+
+// Contextos globales
 import { ClienteContext } from "../context/ClienteContext.js";
 import { CarroContext } from "../context/CarroContext.js";
+
+// Navegación con React Router
 import { useNavigate } from "react-router-dom";
+
+// Servicio para actualizar datos del cliente
 import actualizarCliente from "../services/actualizacionClientes.js";
 
+/**
+ * Componente Compra
+ * Muestra los datos del cliente, resumen del pedido y lanza el pago a Redsys.
+ */
 const Compra = () => {
   const { cliente, setCliente } = useContext(ClienteContext);
   const { carro } = useContext(CarroContext);
   const navigate = useNavigate();
+
+  // Estado para la dirección de envío
   const [direccion, setDireccion] = useState(cliente?.direccion || "");
+
+  // Validación de dirección
   const [errorDireccion, setErrorDireccion] = useState(false);
+
+  // Estados para mostrar mensajes de éxito o error
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
+  // Calcula el total del pedido
   const total = carro.reduce(
     (acumulado, item) => acumulado + item.producto.precio * item.cantidad,
     0
   );
 
+  /**
+   * Actualiza la dirección del cliente en el servidor
+   */
   const handleActualizarDireccion = async () => {
     if (direccion.trim()) {
       const clienteActualizado = { ...cliente, direccion: direccion.trim() };
@@ -46,20 +69,21 @@ const Compra = () => {
       }
     }
   };
+
+  /**
+   * Envía los datos del pedido al backend para generar el pago con Redsys
+   */
   const enviarPagoARedsys = async () => {
     try {
       const respuesta = await fetch("http://localhost:3001/pago/generarPago", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cliente, carro, total })
       });
 
       const data = await respuesta.json();
 
-      console.log(`respuesta del servidor en la compra redsys: ${data}`);
-
+      // Crea y envía el formulario a Redsys
       const form = document.createElement("form");
       form.method = "POST";
       form.action = data.url;
@@ -69,11 +93,6 @@ const Compra = () => {
         Ds_MerchantParameters: data.params,
         Ds_Signature: data.signature
       };
-      console.log("Formulario que se va a enviar:");
-      console.log("Signature Version:", data.version);
-      console.log("Merchant Parameters:", data.params);
-      console.log("Signature:", data.signature);
-      
 
       for (const [key, value] of Object.entries(campos)) {
         const input = document.createElement("input");
@@ -90,7 +109,11 @@ const Compra = () => {
       setOpenError(true);
     }
   };
-  
+
+  /**
+   * Maneja el botón "Pagar"
+   * Valida la dirección, actualiza datos y lanza el pago
+   */
   const handlePagar = async () => {
     if (!direccion.trim()) {
       setErrorDireccion(true);
@@ -99,18 +122,20 @@ const Compra = () => {
 
     setErrorDireccion(false);
     await handleActualizarDireccion();
-    await enviarPagoARedsys(); // 🔥 Aquí lanzamos el pago Redsys
+    await enviarPagoARedsys();
   };
 
+  // Vuelve a la pantalla anterior
   const handleVolver = () => {
     navigate(-1);
   };
 
-  useEffect(()=>{
-    if (!cliente.nombre){
+  // Si el cliente no tiene nombre, redirige a completar datos
+  useEffect(() => {
+    if (!cliente.nombre) {
       navigate('/datosCliente');
     }
-  },[])
+  }, []);
 
   return (
     <Box sx={{ maxWidth: 700, mx: "auto", mt: 4, p: 3 }}>
@@ -139,7 +164,7 @@ const Compra = () => {
           sx={{ mb: 3 }}
         />
 
-        {/* Dirección + botón de guardar */}
+        {/* Dirección editable con botón de guardar */}
         <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
           <TextField
             fullWidth
@@ -151,7 +176,7 @@ const Compra = () => {
             error={errorDireccion}
             helperText={errorDireccion ? "Por favor, introduce una dirección" : ""}
           />
-          <Tooltip title="Actualizar  dirección">
+          <Tooltip title="Actualizar dirección">
             <IconButton
               color="primary"
               onClick={handleActualizarDireccion}
@@ -160,6 +185,8 @@ const Compra = () => {
               <SaveIcon />
             </IconButton>
           </Tooltip>
+
+          {/* Snackbar de éxito */}
           <Snackbar
             open={openSuccess}
             autoHideDuration={3000}
@@ -171,6 +198,7 @@ const Compra = () => {
             </Alert>
           </Snackbar>
 
+          {/* Snackbar de error */}
           <Snackbar
             open={openError}
             autoHideDuration={3000}
@@ -190,6 +218,7 @@ const Compra = () => {
           Resumen del pedido
         </Typography>
 
+        {/* Lista de productos */}
         {carro.map((item) => (
           <Box key={item.producto.id} sx={{ my: 1 }}>
             <Typography>
@@ -200,12 +229,14 @@ const Compra = () => {
         ))}
 
         <Divider sx={{ my: 2 }} />
+
+        {/* Total del pedido */}
         <Typography variant="h6" align="right" sx={{ fontWeight: "bold" }}>
           Total: {total.toFixed(2)} €
         </Typography>
       </Paper>
 
-      {/* Botones */}
+      {/* Botones de acción */}
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button variant="contained" color="secondary" onClick={handleVolver}>
           Volver

@@ -8,6 +8,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Componente Registro
+ * Permite registrar un nuevo cliente en dos fases: datos iniciales y verificación por código.
+ */
 const Registro = () => {
   const [fase, setFase] = useState("inicio"); // 'inicio', 'codigo', 'completado'
   const [formData, setFormData] = useState({
@@ -20,10 +24,13 @@ const Registro = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Paso 1: enviar email y contraseña al servidor
+  /**
+   * Paso 1: Enviar email y contraseña al servidor
+   */
   const enviarDatosIniciales = async () => {
     setError("");
     setMensaje("");
+
     if (formData.password !== formData.confirmPassword) {
       setError("La contraseña y su confirmación no coinciden.");
       return;
@@ -38,6 +45,7 @@ const Registro = () => {
           password: formData.password
         })
       });
+
       const data = await res.json();
 
       if (res.ok) {
@@ -51,9 +59,12 @@ const Registro = () => {
     }
   };
 
-  // Paso 2: verificar el código
+  /**
+   * Paso 2: Verificar el código recibido por correo
+   */
   const verificarCodigo = async () => {
     setError("");
+
     try {
       const res = await fetch("http://localhost:3001/clientes/verificar-codigo", {
         method: "POST",
@@ -63,6 +74,7 @@ const Registro = () => {
           codigo
         })
       });
+
       const data = await res.json();
 
       if (res.ok) {
@@ -76,6 +88,9 @@ const Registro = () => {
     }
   };
 
+  /**
+   * Renderiza el formulario según la fase actual
+   */
   return (
     <Box
       sx={{
@@ -88,6 +103,7 @@ const Registro = () => {
         backgroundColor: "#fff"
       }}
     >
+      {/* Logo y título */}
       <Box sx={{ textAlign: "center", mb: 3 }}>
         <img src="/images/logo.png" alt="Logo" style={{ maxWidth: "180px" }} />
         <Typography variant="h5" sx={{ fontWeight: "bold", mt: 1 }}>
@@ -95,6 +111,7 @@ const Registro = () => {
         </Typography>
       </Box>
 
+      {/* Fase 1: Datos iniciales */}
       {fase === "inicio" && (
         <>
           <TextField
@@ -141,6 +158,7 @@ const Registro = () => {
         </>
       )}
 
+      {/* Fase 2: Verificación del código */}
       {fase === "codigo" && (
         <>
           <Typography sx={{ mt: 2 }}>
@@ -165,6 +183,7 @@ const Registro = () => {
         </>
       )}
 
+      {/* Fase 3: Confirmación */}
       {fase === "completado" && (
         <>
           <Typography color="success.main" sx={{ mt: 2 }}>
@@ -182,7 +201,7 @@ const Registro = () => {
         </>
       )}
 
-      {/* Mensajes */}
+      {/* Mensajes de error o éxito */}
       {(mensaje || error) && (
         <>
           <Divider sx={{ my: 2 }} />

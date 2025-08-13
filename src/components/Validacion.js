@@ -1,19 +1,30 @@
 import React, { useContext } from "react";
-import { Box, TextField, Button, Typography} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography
+} from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
 import { ClienteContext } from "../context/ClienteContext.js";
 import { CarroContext } from "../context/CarroContext.js";
 import { SocketContext } from "../context/WebSocketContext.js";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { Link } from "react-router-dom"; 
 
+/**
+ * Componente Validacion
+ * Permite al usuario iniciar sesión con email/contraseña o Google.
+ */
 export default function Validacion() {
   const { setCliente } = useContext(ClienteContext);
   const { setCarro } = useContext(CarroContext);
   const { socket } = useContext(SocketContext);
   const navigate = useNavigate();
 
+  /**
+   * Maneja el login tradicional
+   */
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -60,54 +71,53 @@ export default function Validacion() {
     }
   };
 
+  /**
+   * Maneja el login con Google
+   */
   const handleGoogleSuccess = (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
 
     fetch("http://localhost:3001/clientes/login-google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ googleData: decoded }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ googleData: decoded }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Error desconocido");
+        return data;
       })
-        .then(async (res) => {
-          const data = await res.json();
-          if (!res.ok) {
-            throw new Error(data.error || "Error desconocido");
-          }
-          return data;
-        })
-        .then(async (data) => {
-          const clienteGoogle = data.cliente;
-          if (clienteGoogle) {
-            if (clienteGoogle?.token) {
-              sessionStorage.setItem("cliente", JSON.stringify(clienteGoogle));
-              setCliente(clienteGoogle);
-              socket.emit("registro", clienteGoogle.email);
+      .then(async (data) => {
+        const clienteGoogle = data.cliente;
+        if (clienteGoogle?.token) {
+          sessionStorage.setItem("cliente", JSON.stringify(clienteGoogle));
+          setCliente(clienteGoogle);
+          socket.emit("registro", clienteGoogle.email);
 
-              const resCarro = await fetch("http://localhost:3001/carros/cargar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(clienteGoogle),
-              });
+          const resCarro = await fetch("http://localhost:3001/carros/cargar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(clienteGoogle),
+          });
 
-              const carroData = await resCarro.json();
-              sessionStorage.setItem("carro", JSON.stringify(carroData));
-              setCarro(carroData);
+          const carroData = await resCarro.json();
+          sessionStorage.setItem("carro", JSON.stringify(carroData));
+          setCarro(carroData);
 
-              navigate("/");
-            } else {
-              alert("Cliente no autorizado.");
-            }
+          navigate("/");
+        } else {
+          alert("Cliente no autorizado.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error al iniciar sesión con Google:", err);
+        alert(err.message);
+      });
+  };
 
-          } else {
-            alert("Cliente no recibido del servidor.");
-          }
-        })
-        .catch((err) => {
-          console.error("Error al iniciar sesión con Google:", err);
-          alert(err.message);
-        });
-  }
-
+  /**
+   * Renderiza el formulario de login
+   */
   return (
     <Box
       sx={{
@@ -130,6 +140,7 @@ export default function Validacion() {
         Identifícate para continuar.
       </Typography>
 
+      {/* Formulario tradicional */}
       <form onSubmit={handleSubmitLogin}>
         <TextField
           name="email"
@@ -159,6 +170,7 @@ export default function Validacion() {
         </Button>
       </form>
 
+      {/* Login con Google */}
       <Typography variant="body2" sx={{ mt: 2 }}>
         — o accede con tu cuenta Google —
       </Typography>
@@ -169,6 +181,7 @@ export default function Validacion() {
         />
       </Box>
 
+      {/* Enlaces adicionales */}
       <Typography variant="body2" sx={{ mt: 3 }}>
         ¿Olvidaste la contraseña?{" "}
         <Link

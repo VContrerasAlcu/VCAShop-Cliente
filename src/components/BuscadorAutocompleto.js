@@ -3,70 +3,89 @@ import { useNavigate } from "react-router-dom";
 import { productosContext } from "../context/productosContext.js";
 import { TextField, Box, Typography, Paper } from "@mui/material";
 
+/**
+ * Componente BuscadorAutocompleto
+ * Permite buscar productos por nombre o descripción con sugerencias dinámicas.
+ */
 export default function BuscadorAutocompleto() {
+  // Accede a la lista de productos desde el contexto global
   const { productos } = useContext(productosContext);
+
+  // Estado para el texto ingresado por el usuario
   const [texto, setTexto] = useState("");
+
+  // Hook para redireccionar a la página de resultados
   const navigate = useNavigate();
+
+  // Estado para mostrar u ocultar las sugerencias
   const [mostrarSugerencias, setMostrarSugerencias] = useState(true);
 
+  /**
+   * Genera una lista de sugerencias basada en el texto ingresado
+   * Se actualiza solo cuando cambian el texto o los productos
+   */
   const sugerencias = useMemo(() => {
     const filtro = texto.trim().toLowerCase();
     if (!filtro) return [];
+
     return productos
       .filter((p) =>
         `${p.nombre} ${p.descripcion}`.toLowerCase().includes(filtro)
       )
-      .slice(0, 5);
+      .slice(0, 5); // Limita a 5 sugerencias
   }, [texto, productos]);
 
-    const handleKeyDown = (e) => {
+  /**
+   * Maneja el evento de presionar una tecla
+   * Si es Enter, redirige a la página de búsqueda
+   */
+  const handleKeyDown = (e) => {
     if (e.key === "Enter" && texto.trim()) {
-        setMostrarSugerencias(false);
-        navigate(`/buscar?texto=${encodeURIComponent(texto.trim())}`);
-        setTexto("");
-
+      setMostrarSugerencias(false);
+      navigate(`/buscar?texto=${encodeURIComponent(texto.trim())}`);
+      setTexto("");
     }
-    };
+  };
 
-    const handleSeleccion = (nombre) => {
+  /**
+   * Maneja la selección de una sugerencia
+   * Redirige a la búsqueda del producto seleccionado
+   */
+  const handleSeleccion = (nombre) => {
     setTexto(nombre);
-    setMostrarSugerencias(false); // 👈 también oculta aquí
+    setMostrarSugerencias(false);
     navigate(`/buscar?texto=${encodeURIComponent(nombre)}`);
-    };
+  };
+
   return (
     <Box sx={{ position: "relative", maxWidth: 400 }}>
-    <TextField
-    label="Buscar productos"
-    variant="outlined"
-    fullWidth
-    value={texto}
-    onChange={(e) => {
-        setTexto(e.target.value);
-        setMostrarSugerencias(true); // 👈 vuelve a mostrar mientras escribe
+      {/* Campo de texto para búsqueda */}
+      <TextField
+        label="Buscar productos"
+        variant="outlined"
+        fullWidth
+        value={texto}
+        onChange={(e) => {
+          setTexto(e.target.value);
+          setMostrarSugerencias(true); // Vuelve a mostrar sugerencias mientras escribe
         }}
-    onKeyDown={handleKeyDown}
-    size="small"
-    sx={{
-        input: { color: "#fff" },
-        "& label": { color: "#ccc" },
-        "& label.Mui-focused": { color: "#fff" },
-        "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-            borderColor: "#ccc",
-        },
-        "&:hover fieldset": {
-            borderColor: "#fff",
-        },
-        "&.Mui-focused fieldset": {
-            borderColor: "#1e88e5", // color azul claro al enfocar
-        },
-        backgroundColor: "rgba(255,255,255,0.1)", // fondo claro semitransparente
-        }
-    }}
-    />
+        onKeyDown={handleKeyDown}
+        size="small"
+        sx={{
+          input: { color: "#fff" },
+          "& label": { color: "#ccc" },
+          "& label.Mui-focused": { color: "#fff" },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": { borderColor: "#ccc" },
+            "&:hover fieldset": { borderColor: "#fff" },
+            "&.Mui-focused fieldset": { borderColor: "#1e88e5" },
+            backgroundColor: "rgba(255,255,255,0.1)",
+          },
+        }}
+      />
 
+      {/* Lista de sugerencias mostrada debajo del campo */}
       {mostrarSugerencias && sugerencias.length > 0 && (
-
         <Paper
           elevation={3}
           sx={{
