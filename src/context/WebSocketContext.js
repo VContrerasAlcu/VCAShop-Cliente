@@ -1,6 +1,4 @@
-// Importa funciones necesarias de React
 import { createContext, useEffect, useState } from "react";
-// Importa la función para crear la conexión WebSocket
 import { io } from "socket.io-client";
 
 // Crea el contexto que se usará para compartir la conexión WebSocket
@@ -11,7 +9,7 @@ export const SocketContext = createContext();
  * Establece y gestiona la conexión WebSocket con el servidor.
  */
 export function SocketProvider({ children }) {
-  // Estado local para guardar la instancia del socket
+  
   const [socket, setSocket] = useState(null);
 
   /**

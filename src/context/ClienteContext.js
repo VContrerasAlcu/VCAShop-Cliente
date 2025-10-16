@@ -1,4 +1,3 @@
-// Importa funciones necesarias de React
 import { createContext, useState, useEffect } from "react";
 
 // Crea el contexto que se usará para compartir el estado del cliente autenticado
@@ -9,7 +8,7 @@ export const ClienteContext = createContext(null);
  * Proporciona el estado del cliente a toda la aplicación.
  */
 export function ClienteProvider({ children }) {
-  // Estado local para guardar el cliente autenticado
+
   const [cliente, setCliente] = useState(null);
 
   /**

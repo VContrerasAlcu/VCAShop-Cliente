@@ -51,7 +51,7 @@ import Chip from "@mui/material/Chip";
 import PlaceIcon from '@mui/icons-material/Place';
 
 // Componente principal de la barra de navegación
-export default function PrimarySearchAppBar() {
+  export default function PrimarySearchAppBar() {
   // Acceso a los contextos globales
   const { carro, setCarro } = useContext(CarroContext);
   const { cliente, setCliente } = useContext(ClienteContext);
@@ -279,7 +279,7 @@ return (
           <BuscadorResponsivo />
         </Box>
 
-        {/* Espaciador para empujar los íconos a la derecha */}
+       
         <Box sx={{ flexGrow: 1 }} />
 
         {/* Íconos visibles solo en pantallas medianas o grandes */}
@@ -321,7 +321,7 @@ return (
       </Toolbar>
     </AppBar>
 
-    {/* Renderizado de los tres menús: móvil, usuario y lateral */}
+   
     {renderMobileMenu}
     {renderMenu}
     {renderMenuLateral}
@@ -336,7 +336,7 @@ return (
           fontFamily: "Inter, sans-serif",
         }}
       >
-        {/* Mapeo de categorías para mostrar como botones con íconos */}
+        {/* Mapeo de categorías para mostrar como botones con iconos */}
         {["Juguetes", "Ropa", "Electrónica", "Hogar", "Destacados"].map((cat) => (
           <Typography
             key={cat}

@@ -1,5 +1,5 @@
 /**
- * 🛒 Función productoEnCarro
+ *  Función productoEnCarro
  * Verifica si un producto ya está presente en el carrito.
  *
  * @param {Object} producto - Producto que se quiere verificar.

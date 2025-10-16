@@ -15,7 +15,7 @@ import {
 const Conocenos = () => (
   <Box sx={{ p: 4, maxWidth: 1000, mx: "auto" }}>
     
-    {/* 🎯 Misión y visión */}
+    {/* Misión y visión */}
     <Typography variant="h3" gutterBottom fontWeight="bold">
       Conócenos
     </Typography>
@@ -27,7 +27,7 @@ const Conocenos = () => (
 
     <Divider sx={{ my: 4 }} />
 
-    {/* 👤 Autor del proyecto */}
+    {/*  Autor del proyecto */}
     <Typography variant="h5" gutterBottom fontWeight="bold">
       Quien está detrás
     </Typography>

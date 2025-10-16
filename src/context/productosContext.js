@@ -1,4 +1,3 @@
-// Importa funciones necesarias de React
 import { createContext, useState } from "react";
 
 // Crea el contexto que se usará para compartir la lista de productos
@@ -9,7 +8,7 @@ export const productosContext = createContext();
  * Proporciona la lista de productos a toda la aplicación.
  */
 export function ProductosProvider({ children }) {
-  // Estado local para guardar todos los productos disponibles
+
   const [productos, setProductos] = useState([]);
 
   /**

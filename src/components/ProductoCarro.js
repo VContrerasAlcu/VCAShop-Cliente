@@ -8,8 +8,6 @@ import {
   Stack
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-// Contextos y clases
 import { CarroContext } from "../context/CarroContext.js";
 import { ClienteContext } from "../context/ClienteContext.js";
 import { SocketContext } from "../context/WebSocketContext.js";

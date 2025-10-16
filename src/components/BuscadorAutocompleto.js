@@ -8,16 +8,10 @@ import { TextField, Box, Typography, Paper } from "@mui/material";
  * Permite buscar productos por nombre o descripción con sugerencias dinámicas.
  */
 export default function BuscadorAutocompleto() {
-  // Accede a la lista de productos desde el contexto global
+  
   const { productos } = useContext(productosContext);
-
-  // Estado para el texto ingresado por el usuario
   const [texto, setTexto] = useState("");
-
-  // Hook para redireccionar a la página de resultados
   const navigate = useNavigate();
-
-  // Estado para mostrar u ocultar las sugerencias
   const [mostrarSugerencias, setMostrarSugerencias] = useState(true);
 
   /**

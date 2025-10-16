@@ -5,12 +5,12 @@ export default async function actualizarCliente(cliente) {
     const response = await fetch("http://localhost:3001/clientes/actualizarDatos", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json" // Indica que se envía JSON
+        "Content-Type": "application/json" 
       },
       body: JSON.stringify(cliente) // Convierte el objeto cliente a JSON
     });
 
-    // Si la respuesta es exitosa (status 200–299), devuelve true
+    // Si la respuesta es exitosa, devuelve true
     if (response.ok) {
       return true;
     } else {

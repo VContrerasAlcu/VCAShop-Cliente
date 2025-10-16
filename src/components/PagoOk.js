@@ -1,8 +1,6 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-// Contextos
 import { CarroContext } from "../context/CarroContext.js";
 import { ClienteContext } from "../context/ClienteContext.js";
 import { SocketContext } from "../context/WebSocketContext.js";

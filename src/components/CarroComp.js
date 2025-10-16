@@ -1,19 +1,11 @@
-// Importaciones de Material UI
+
 import { Box, Button, Typography, Paper } from "@mui/material";
-
-// Navegación con React Router
 import { useNavigate } from "react-router-dom";
-
-// Componente que muestra cada producto en el carrito
 import ProductoCarro from "./ProductoCarro.js";
-
-// Contextos globales
 import { CarroContext } from "../context/CarroContext.js";
 import { useContext } from "react";
 import { SocketContext } from "../context/WebSocketContext.js";
 import { ClienteContext } from "../context/ClienteContext.js";
-
-// Clase Carro para gestionar el carrito con WebSocket
 import Carro from "../classes/Carro.js";
 
 /**
@@ -21,16 +13,10 @@ import Carro from "../classes/Carro.js";
  * Muestra los productos en el carrito y permite volver o comprar.
  */
 const CarroComp = () => {
-  // Accede al socket desde el contexto
+  
   const { socket } = useContext(SocketContext);
-
-  // Accede al cliente autenticado
   const { cliente } = useContext(ClienteContext);
-
-  // Hook para navegar entre rutas
   const navigate = useNavigate();
-
-  // Accede al carrito y su actualizador desde el contexto
   const { carro, setCarro } = useContext(CarroContext);
 
   // Calcula el total del carrito sumando precio * cantidad
@@ -46,12 +32,10 @@ const CarroComp = () => {
   const volver = async () => {
     const nuevoCarro = new Carro(carro, socket, cliente);
 
-    // Reagrega cada producto al nuevo carrito
     for (const item of carro) {
       await nuevoCarro.agregar(item.producto, item.cantidad);
     }
 
-    // Actualiza el contexto con el nuevo contenido
     setCarro([...nuevoCarro.contenido]);
 
     // Navega hacia atrás
@@ -60,7 +44,7 @@ const CarroComp = () => {
 
   return (
     <Box sx={{ p: 3, maxWidth: 600, mx: "auto" }}>
-      {/* Título principal */}
+      
       <Typography variant="h4" align="center" gutterBottom>
         Tu Carrito 🛒
       </Typography>
@@ -70,7 +54,6 @@ const CarroComp = () => {
         {carro.length > 0 ? (
           carro.map(({ producto, cantidad }) => (
             <Box key={producto.id} sx={{ mb: 2 }}>
-              {/* Renderiza cada producto con su cantidad */}
               <ProductoCarro producto={producto} cantidad={cantidad} />
             </Box>
           ))

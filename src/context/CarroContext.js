@@ -1,4 +1,3 @@
-// Importa funciones necesarias de React
 import { createContext, useEffect, useState } from "react";
 
 // Crea el contexto que se usará para compartir el estado del carrito
@@ -9,7 +8,7 @@ export const CarroContext = createContext();
  * Proporciona el estado del carrito a toda la aplicación.
  */
 export function CarroProvider({ children }) {
-  // Estado local para guardar el contenido del carrito
+ 
   const [carro, setCarro] = useState([]);
 
   /**

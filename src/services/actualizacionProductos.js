@@ -1,5 +1,5 @@
 /**
- * 🔄 Función actualizarProductos
+ *  Función actualizarProductos
  * Reemplaza un producto dentro del array de productos por su versión actualizada.
  *
  * @param {Array} productos - Lista actual de productos.

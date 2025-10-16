@@ -1,4 +1,3 @@
-// Importa funciones necesarias de React
 import { createContext, useState, useEffect } from "react";
 
 // Crea el contexto que se usará para compartir el estado del cliente

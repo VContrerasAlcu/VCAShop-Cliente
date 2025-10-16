@@ -1,18 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
-// Clases y componentes
 import Producto from "../classes/Producto.js";
 import ProductoMin from "./ProductoMin.js";
-
-// Contextos
 import { productosContext } from "../context/productosContext.js";
 import { SocketContext } from "../context/WebSocketContext.js";
 import { CarroContext } from "../context/CarroContext.js";
 import { CategoriaContext } from "../context/CategoriaContext.js";
 import { ClienteContext } from "../context/ClienteContext.js";
-
-// Servicios
 import actualizarProductos from "../services/actualizacionProductos.js";
 import { productoEnCarro } from "../services/utilsCarro.js";
 

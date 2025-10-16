@@ -12,21 +12,15 @@ import {
 } from "@mui/material";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-// Iconos
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-
-// Contextos
 import { productoContext } from "../context/productoContext.js";
 import { CarroContext } from "../context/CarroContext.js";
 import { ClienteContext } from "../context/ClienteContext.js";
 import { SocketContext } from "../context/WebSocketContext.js";
 import { productosContext } from "../context/productosContext.js";
-
-// Clases y servicios
 import Carro from "../classes/Carro.js";
 import Producto from "../classes/Producto.js";
 import actualizarProductos from "../services/actualizacionProductos.js";

@@ -1,4 +1,3 @@
-// Importa funciones necesarias de React
 import { createContext, useState } from "react";
 
 // Crea el contexto que se usará para compartir la categoría seleccionada
@@ -9,7 +8,7 @@ export const CategoriaContext = createContext();
  * Proporciona el estado de la categoría seleccionada a toda la aplicación.
  */
 export const CategoriaProvider = ({ children }) => {
-  // Estado local para guardar la categoría actualmente seleccionada
+  
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
 
   /**
